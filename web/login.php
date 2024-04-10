@@ -35,11 +35,11 @@
 			// *** ACTIVATE FOR TEST ACCESS ***
 			// Please use a unique test username and password before uploading on the server.
 			//
-			// if($username == "Tester" && $password == "123456"){
-			// 		$_SESSION['username'] = "TE";
-			// 		$_SESSION['employeetype'] = "Tester";
-			// 		return true;
-			// }
+			 if($username == "tester" && $password == "123456"){
+			 		$_SESSION['username'] = "TE";
+			 		$_SESSION['employeetype'] = "Tester";
+			 		return true;
+			 }
 
 			$ldapConn = ldap_connect($ldap_host, $ldap_port);
 			if (!$ldapConn) {
@@ -96,7 +96,7 @@
 
 		$name = $info[0]["displayname"][0];
 		$parts = explode(", ", $name);
-		$initials = substr($parts[1], 0, 1) . substr($parts[0], 0, 1);
+		$initials = login . phpsubstr($parts[1], 0, 1) . substr($parts[0], 0, 1);
 		$_SESSION['username'] = $initials;
 		$_SESSION['employeetype'] = $info[0]["employeetype"][0];
 		return true;
@@ -120,7 +120,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>HAWKI</title>
 
-		<link rel="stylesheet" href="./style.css">
+		<link rel="stylesheet" href="style.css">
 		<link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
 	</head>
 	<body>
@@ -128,7 +128,7 @@
 		<div class="wrapper">
 			<aside>
 				<div class="loginPanel">
-					<img id="HAWK_logo" src="/img/logo.svg" alt="">
+					<img id="HAWK_logo" src="/web/img/logo.svg" alt="">
 					<h3>Willkommen zurück!</h3>
 					<?php
 						if (file_exists(".env")){
@@ -192,7 +192,7 @@
 					</div>
 				</div>
 				<div class="backgroundImageContainer">
-					<video class="image_preview_container" src="./img/HAWKIBG.m4v" type="video/m4v" autoplay loop muted></video>
+					<video class="image_preview_container" src="img/HAWKIBG.m4v" type="video/m4v" autoplay loop muted></video>
 				</div>
 			</main>
 		</div>

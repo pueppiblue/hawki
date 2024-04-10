@@ -18,7 +18,7 @@
 <div class="wrapper">
 	<div class="sidebar">
 		<div class="logo">
-			<img src="/img/logo.svg" alt="HAWK Logo" width="150px">
+			<img src="/web/img/logo.svg" alt="HAWK Logo" width="150px">
 		</div>
 		<div class="menu">
 			<details>
@@ -103,7 +103,7 @@
 			<a href="logout.php">Abmelden</a>
 			<br>
 			<a href="#" onclick="load(this, 'datenschutz.htm')">Datenschutz</a>
-			<a href="/impressum" target="_blank">Impressum</a>
+			<a href="/web/impressum" target="_blank">Impressum</a>
 		</div>
 	</div>
 	

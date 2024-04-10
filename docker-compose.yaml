@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: ./web
+      args:
+        APP_ENVIRONMENT: 'dev'
+    environment:
+      - VIRTUAL_HOST=hawki.local
+      - VIRTUAL_PORT=443
+      - VIRTUAL_PROTO=https
+    volumes:
+      - ./web/:/var/www/html
+      - ../nginx-proxy/certs:/var/www/certs # adjust to the place of your nginx-proxy; just needed for webpack encore dev server
+    restart: "no"
+    ports:
+      - "8080:80"
+      - "9999:443"
+    expose:
+      - 443
+
+networks:
+  default:
+    external:
+      name: hawki
+

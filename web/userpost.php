@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 	$sanitizedJsonString = "{\"role\":\"$sanitizedRole\",\"content\":\"$sanitizedContent\"}";
 	
-	$uniqid = time() . uniqid();
+	$uniqid = userpost . phptime() . uniqid();
 	file_put_contents("feedback/$uniqid.json", $sanitizedJsonString);
 	echo $sanitizedJsonString;
 }
