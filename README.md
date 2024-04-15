@@ -5,6 +5,105 @@
 Im Rahmen der gemeinsamen Weiterentwicklung von HAWKI möchten wir ein Dokument zur Verfügung stellen, das verschiedene Nutzungsmöglichkeiten von HAWKI aufzeigt. Hier ist Platz, um Promptvorschläge für die Hochschullehre zu machen oder weitere fiktive Expert*innen für das virtuelle Büro hinzuzufügen.
 https://pad.hawk.de/p/Offener_Prompt-Katalog
 
+### How to start local development?
+
+1. ##### Setup a proxy with nginx (which includes docker-gen)
+   Place the following ```docker-compose.yml``` in the folder of your choice, e.g. ```/var/apps/nginx-proxy/``` or ```/<your-home-dir>/workspace/nginx-proxy/```.
+    ```yaml
+    version: "3.4"
+   
+    services:
+        nginx-proxy:
+            image: jwilder/nginx-proxy:alpine
+            container_name: nginx-proxy
+            ports:
+                - target: 80
+                  published: 80
+                  protocol: tcp
+                - target: 443
+                  published: 443
+                  protocol: tcp
+            volumes:
+                - /var/run/docker.sock:/tmp/docker.sock:ro
+                - ./certs:/etc/nginx/certs
+                - ./vhosts:/etc/nginx/conf.d
+            networks:
+                - hawki
+    
+    networks:
+        hawki:
+           external: true
+    ```
+
+2. ##### Install local ssl certificates
+   The following could be automated with own Dockerfile
+   including jwilder/nginx-proxy and mkCert - alike to dev-tls docker file. <br>
+
+   First you have to settle on a domain to use for hawki.
+   We will use `hawki.local` in the following.
+   Using only `hawki` would be troubling for certificates since most browsers
+   do not accept wildcard certificates for second-level domains:
+   e.g. browser will not accept certs created with `*.hawki` for subdomain `api.hawki`
+
+   ###### install [mkCert](https://github.com/FiloSottile/mkcert)
+    ```BASH
+    # linux
+    wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64
+    sudo mv mkcert-v1.4.1-linux-amd64 /usr/local/bin/mkcert
+    sudo chmod +x /usr/local/bin/mkcert
+    ```
+    ```BASH
+    # macOS
+    brew install mkcert
+    brew install nss # if you use Firefox
+    ```
+   ###### Install rootCA
+   This automatically adds mkcert's rootCA to your systems trusted CAs so you no longer will be bugged by untrusted certificate notifications in your local browser.
+    ```BASH
+    mkcert --install
+    ```
+###### create Certs
+Navigate to the nginx-proxy certs volume e.g. `cd /var/apps/nginx-proxy/certs` or ```/<your-home-dir>/workspace/nginx-proxy/certs```
+   ```BASH
+   mkcert -key-file hawki.local.key -cert-file hawki.local.crt hawki.local *.hawki.local  
+   ```
+This generates a certificate for all subdomains of `hawki.local`
+
+3. ##### setup dns
+    ```BASH
+    # /etc/hosts
+    127.0.0.1	hawki.local
+    ```
+
+4. ##### start nginx-proxy
+
+    ```BASH
+    # this need to be run only once 
+    docker network create hawki
+    ```
+
+    ```BASH
+    # /var/apps/nginx-proxy/ or /<your-home-dir>/workspace/nginx-proxy/
+    docker-compose up -d    
+    ```
+5. ##### create .env
+   ```BASH
+   #<yourWorkSpace>/hawki
+   cp .env.dist .env
+   ```
+   
+
+6. ##### start hawki stack
+    ```BASH
+    #<yourWorkSpace>/hawki
+    docker-compose up -d
+    ```
+   nginx-proxy will create a vhost entry for each of hawki's services which has an environment variable `VIRTUAL_HOST` set.
+   You can check the created hosts in a volume:
+
+    ```BASH
+    cat path-to-nginx-proxy/vhosts/default.conf
+    ```
 
 ## About
 

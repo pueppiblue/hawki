@@ -35,7 +35,7 @@
 			// *** ACTIVATE FOR TEST ACCESS ***
 			// Please use a unique test username and password before uploading on the server.
 			//
-			 if($username == "tester" && $password == "123456"){
+			 if($username == "tester" && $password == "superlangespasswort123"){
 			 		$_SESSION['username'] = "TE";
 			 		$_SESSION['employeetype'] = "Tester";
 			 		return true;
